@@ -10,6 +10,8 @@ The function outputs a list containing the value and p-value of both metrics, as
 ## Usage
 
 ```R
+devtools::source_url("https://raw.githubusercontent.com/philriris/p2pPerm/main/R/p2pPerm.R")
+
 library(rcarbon)
 
 # Prepare data
