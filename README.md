@@ -27,7 +27,7 @@ timeRange=c(13400,11000), datenormalised=FALSE, raw=TRUE) # Time range roughly +
 # plot(ydperm, focalm=3)
 
 par(mfrow=c(3,1))
-slevant <- p2pPerm(x=ydperm,p1=13000,p2=12500, type="ros", focalm = "1", plot=TRUE) 
+slevant <- p2pPerm(x=ydperm,p1=13000,p2=12500, type="ros", focalm = "1", plot=TRUE) # Rate of Change version
 nlevant <- p2pPerm(x=ydperm,p1=13000,p2=12500, type="ros", focalm = "2", plot=TRUE) 
 anatolia <- p2pPerm(x=ydperm,p1=13000,p2=12500, type="ros", focalm = "3", plot=TRUE) 
 dev.off()
