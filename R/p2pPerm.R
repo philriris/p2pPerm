@@ -83,7 +83,7 @@ p2pPerm <- function (x, p1 = NA, p2 = NA, p3 = NA, focalm=1, type='spd', plot=FA
       points(p3, p3.y, pch = 20, col="#5e3c99", cex=1.5)
       
     }
-    obs.rt = 1 - ((2 * abs(p1.y - p2.y)) / (p1.y + abs(p1.y - p2.y))) 
+    obs.rt = 1 - ((2 * (abs(p1.y) - abs((p3.y)))) / (p1.y + (abs(p1.y) - abs((p3.y)))))
     
     obs.rs = (2 * abs(p1.y - p3.y) / (abs(p1.y - p3.y) + abs(p1.y - p2.y))) - 1 
     
@@ -109,6 +109,7 @@ p2pPerm <- function (x, p1 = NA, p2 = NA, p3 = NA, focalm=1, type='spd', plot=FA
     
     return(list(pval.resistance=(ifelse(pvalHi.rt < pvalLo.rt, pvalHi.rt, pvalLo.rt) * 2),
                 resistance = obs.rt,
+                lag.resistance = p1-p3,
                 pval.resilience=(ifelse(pvalHi.rs < pvalLo.rs, pvalHi.rs, pvalLo.rs) * 2),
                 resilience = obs.rs) )
   }
@@ -137,15 +138,28 @@ p2pPerm <- function (x, p1 = NA, p2 = NA, p3 = NA, focalm=1, type='spd', plot=FA
       points(p3, p3.y, pch = 20, col="#5e3c99", cex=1.5)
       
     }
-    obs.rt = 1 - ((2 * abs(p1.y - p3.y)) / (p1.y + abs(p1.y - p3.y))) 
     
-    obs.rs = (2 * abs(p1.y - p3.y) / (abs(p1.y - p3.y) + abs(p1.y - p2.y))) - 1 
+    d <- abs(p1.y - p3.y) #resistance
+    dd <- 2 * d
+    p <- abs(p1.y) + d # abs() because negative growth rates
+    dp <- dd/p
+    obs.rt <- 1-dp
     
-    sim.rt = 1 - ((2 * abs(x$raw.row[[focalm]][index1, ] - x$raw.row[[focalm]][index3, ])) / 
-                    (x$raw.row[[3]][index1, ] + abs(x$raw.row[[3]][index1, ] - x$raw.row[[3]][index3, ]))) 
+    d.sim <- abs(x$raw.row[[focalm]][index1, ] - x$raw.row[[focalm]][index3, ])
+    dd.sim <- 2 * d.sim
+    p.sim <- abs(x$raw.row[[focalm]][index1, ]) + d.sim
+    dp.sim <- d.sim/p.sim
+    sim.rt <- 1-dp.sim
     
-    sim.rs = (2 * abs(x$raw.row[[focalm]][index1, ] - x$raw.row[[focalm]][index3, ]) / 
-                (abs(x$raw.row[[focalm]][index1, ] - x$raw.row[[focalm]][index3, ]) + abs(x$raw.row[[3]][index1, ] - x$raw.row[[3]][index2, ]))) - 1 
+    e <- abs(p1.y - p2.y) #resilience
+    e <- d + e
+    e <- dd/e
+    obs.rs <- e - 1
+    
+    e.sim <- abs(x$raw.row[[focalm]][index1, ] - x$raw.row[[focalm]][index2, ])
+    e.sim <- dd.sim - e.sim
+    e.sim <- dd.sim/e.sim
+    sim.rs <- e.sim - 1
     
     nsim = x$nsim 
     
@@ -168,4 +182,6 @@ p2pPerm <- function (x, p1 = NA, p2 = NA, p3 = NA, focalm=1, type='spd', plot=FA
                 resilience = obs.rs) )
   }
 }
+
+
 
