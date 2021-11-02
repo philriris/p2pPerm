@@ -83,15 +83,27 @@ p2pPerm <- function (x, p1 = NA, p2 = NA, p3 = NA, focalm=1, type='spd', plot=FA
       points(p3, p3.y, pch = 20, col="#5e3c99", cex=1.5)
       
     }
-    obs.rt = 1 - ((2 * (abs(p1.y) - abs((p3.y)))) / (p1.y + (abs(p1.y) - abs((p3.y)))))
+    d <- abs(p1.y - p3.y) #resistance
+    dd <- 2 * d
+    p <- abs(p1.y) + d # abs() because negative growth rates
+    dp <- dd/p
+    obs.rt <- 1-dp
     
-    obs.rs = (2 * abs(p1.y - p3.y) / (abs(p1.y - p3.y) + abs(p1.y - p2.y))) - 1 
+    d.sim <- abs(x$raw[[focalm]][index1, ] - x$raw[[focalm]][index3, ])
+    dd.sim <- 2 * d.sim
+    p.sim <- abs(x$raw[[focalm]][index1, ]) + d.sim
+    dp.sim <- d.sim/p.sim
+    sim.rt <- 1-dp.sim
     
-    sim.rt = 1 - ((2 * abs(x$raw[[focalm]][index1, ] - x$raw[[focalm]][index2, ])) / 
-                    (x$raw[[3]][index1, ] + abs(x$raw[[3]][index1, ] - x$raw[[3]][index2, ]))) 
+    e <- abs(p1.y - p2.y) #resilience
+    e <- d + e
+    e <- dd/e
+    obs.rs <- e - 1
     
-    sim.rs = (2 * abs(x$raw[[focalm]][index1, ] - x$raw[[focalm]][index3, ]) / 
-                (abs(x$raw[[focalm]][index1, ] - x$raw[[focalm]][index3, ]) + abs(x$raw[[3]][index1, ] - x$raw[[3]][index2, ]))) - 1 
+    e.sim <- abs(x$raw[[focalm]][index1, ] - x$raw[[focalm]][index2, ])
+    e.sim <- dd.sim - e.sim
+    e.sim <- dd.sim/e.sim
+    sim.rs <- e.sim - 1
     
     nsim = x$nsim 
     
